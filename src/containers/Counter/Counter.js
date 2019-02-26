@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import CounterControl from "../../components/CounterControl/CounterControl";
 import CounterOutput from "../../components/CounterOutput/CounterOutput";
-
+import * as actionTypes from "../../store/action";
 class Counter extends Component {
   state = {
     counter: 0
@@ -48,7 +48,9 @@ class Counter extends Component {
         <CounterControl label="Add 5" clicked={this.props.onAddFive} />
         <CounterControl label="Subtract 5" clicked={this.props.onSubFive} />
         <hr />
-        <button onClick={this.props.onStoreResult}>Store result</button>
+        <button onClick={() => this.props.onStoreResult(this.props.ctr)}>
+          Store result
+        </button>
         <ul>
           {this.props.storedResult.map(stored => {
             return (
@@ -67,19 +69,21 @@ class Counter extends Component {
 }
 const mapStateToProps = state => {
   return {
-    ctr: state.counter,
-    storedResult: state.result
+    ctr: state.ctr.counter,
+    storedResult: state.res.result
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onIncrementCounter: () => dispatch({ type: "INCREMENT" }),
-    onDecrementCounter: () => dispatch({ type: "DECREMENT" }),
-    onAddFive: () => dispatch({ type: "ADD_FIVE", value: 5 }),
-    onSubFive: () => dispatch({ type: "SUB_FIVE", value: 5 }),
-    onStoreResult: () => dispatch({ type: "STORE_RESULT" }),
-    onDeleteResult: id => dispatch({ type: "DELETE_RESULT", resultElId: id })
+    onIncrementCounter: () => dispatch({ type: actionTypes.INCREMENT }),
+    onDecrementCounter: () => dispatch({ type: actionTypes.DECREMENT }),
+    onAddFive: () => dispatch({ type: actionTypes.ADD_FIVE, value: 5 }),
+    onSubFive: () => dispatch({ type: actionTypes.SUB_FIVE, value: 5 }),
+    onStoreResult: result =>
+      dispatch({ type: actionTypes.STORE_RESULT, result: result }),
+    onDeleteResult: id =>
+      dispatch({ type: actionTypes.DELETE_RESULT, resultElId: id })
   };
 };
 export default connect(
